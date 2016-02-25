@@ -69,8 +69,7 @@
         $code = $_GET['code'];
 
         $connection = mysqli_connect($host, $user, $password, $dbname) or die("Error " . mysqli_connect_error());
-        $value = getCourseID($connection, $subject, $code, $year, $term);
-        echo $value;
+        getCourseID($connection, $subject, $code, $year, $term);
         $course_sql->close();
       }
     }
