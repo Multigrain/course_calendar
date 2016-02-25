@@ -38,10 +38,11 @@
 
       //Queries for course codes that match specified semester
       $connection = mysqli_connect($host, $user, $password, $dbname) or die("Error " . mysqli_connect_error());
-      /*$course_sql = $connection->prepare('SELECT subject, code FROM Courses '.
+      $course_sql = $connection->prepare('SELECT subject, code FROM Courses '.
         'LEFT JOIN Semesters ON semester_id = Semesters.id WHERE AND year = ? AND term = ?');
       $course_sql->bind_param('ss', $year, $term);
-      $course_sql->execute();
+
+      /*$course_sql->execute();
 
       //Prepares results to be converted to JSON
       $course_codes = array();
@@ -50,8 +51,8 @@
         array_push($course_codes, $course_subj.' '.$course_code);
       }
 
-      echo json_encode($course_codes);
-      $course_sql->close();*/
+      echo json_encode($course_codes);*/
+      $course_sql->close();
       mysqli_close($connection);
     } elseif($query_type == 'course_info') {
       //Course selection - Finds section/session info for specified course
