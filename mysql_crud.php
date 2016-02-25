@@ -8,8 +8,9 @@
     $course_sql->execute();
 
     //Reads results
-    $course_sql->bind_result($course_id);
+    $course_sql->bind_result($id);
     $course_sql->fetch();
+    $course_id = $id;
     $course_sql->close();
 
     return $course_id;
