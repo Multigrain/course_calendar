@@ -1,13 +1,13 @@
 <?php
   //DB read only credentials
-  $db_host = 'mycampus.ctlmvn6rw3p8.us-east-1.rds.amazonaws.com:3306'
-  $db_user = 'appserver'
-  $db_pass = 'Publicuser'
-  $db_schema = 'mycampus'
+  $db_host = 'mycampus.ctlmvn6rw3p8.us-east-1.rds.amazonaws.com:3306';
+  $db_user = 'appserver';
+  $db_pass = 'Publicuser';
+  $db_schema = 'mycampus';
 
   //Determines if valid query (includes query_type field)
   if(isset($_GET['query_type'])) {
-    $query_type = $_GET['query_type']
+    $query_type = $_GET['query_type'];
 
     if($query_type == 'semesters') {
       //Year selection - Finds all available terms
