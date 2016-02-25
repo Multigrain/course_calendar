@@ -11,7 +11,7 @@
 
     if($query_type == 'semesters') {
       //Year selection - Finds all available terms
-      $connection = mysqli_connect($host, $user, $password, $dbname) or die("Error " . mysqli_connect_error());
+      $connection = mysqli_connect($host, $user, $password, $dbname) or die("Error " . mysqli_error($connection));
 
       $sql = "SELECT year, term FROM Semesters;";
       $result = $connection->query($sql);
