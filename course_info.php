@@ -30,7 +30,7 @@
     } elseif($query_type == 'course_code') {
       //Course codes - Finds all course codes for specified semester
       //Ensures appropriate parameters specified
-      if(!isset(!isset($_GET['year']) || !isset($_GET['term'])) {
+      if(!isset($_GET['year']) || !isset($_GET['term'])) {
         echo 'Incorrect Parameters Specified';
       }
       $year = $_GET['year'];
