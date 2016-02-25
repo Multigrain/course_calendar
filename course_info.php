@@ -67,10 +67,10 @@
         $term = $_GET['term'];
         $subject = $_GET['subject'];
         $code = $_GET['code'];
-        /*
+
         $connection = mysqli_connect($host, $user, $password, $dbname) or die("Error " . mysqli_connect_error());
         echo getCourseID($connection, $subject, $code, $year, $term);
-        $course_sql->close();*/
+        $course_sql->close();
       }
     }
   }
