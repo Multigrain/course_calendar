@@ -6,7 +6,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
     <script>
       $(function() {
-        $( "#birds" ).autocomplete({
+        $( "#Courses" ).autocomplete({
           source: function(request, response) {
             $.ajax({
               url: "course_info.php",
