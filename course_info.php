@@ -10,6 +10,7 @@
     $query_type = $_GET['query_type'];
 
     if($query_type == 'semesters') {
+      phpinfo();
       //Year selection - Finds all available terms
       $connection = mysqli_connect($db_host, $db_user, $db_pass, $db_schema) or die("Error " . mysqli_error($connection));
 
