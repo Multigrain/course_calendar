@@ -36,8 +36,6 @@
       $year = $_GET['year'];
       $term = $_GET['term'];
 
-      echo $term;
-      /*
       //Queries for course codes that match specified semester
       $connection = mysqli_connect($host, $user, $password, $dbname) or die("Error " . mysqli_connect_error());
       $course_sql = $connection->prepare('SELECT subject, code FROM Courses '.
@@ -49,7 +47,7 @@
       $course_codes = array();
       $course_sql->bind_result($course_subj, $course_code);
       while ($course_sql->fetch()) {
-        array_push($course_codes, array($course_subj.' '.$course_code));
+        array_push($course_codes, $course_subj.' '.$course_code);
       }
 
       echo json_encode($course_codes);
