@@ -2,7 +2,7 @@
   //DB read only credentials
   $host = 'mycampus.ctlmvn6rw3p8.us-east-1.rds.amazonaws.com:3306';
   $user = 'appserver';
-  $password = 'Publicuserz';
+  $password = 'Publicuser';
   $dbname = 'mycampus';
 
   //Determines if valid query (includes query_type field)
@@ -13,7 +13,7 @@
       //Year selection - Finds all available terms
       $connection = mysqli_connect($host, $user, $password, $dbname) or die("Error " . mysqli_connect_error());
 
-      $sql = "SELECT year, term FROM Semesters;";
+      $sql = "SELECT year, term FROM Semesters ORDER BY year DESC, term DESC";
       $result = $connection->query($sql);
 
       $semesters = array();
