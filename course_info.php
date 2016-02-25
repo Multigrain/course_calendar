@@ -32,28 +32,29 @@
       //Ensures appropriate parameters specified
       if(!isset($_GET['year']) || !isset($_GET['term']) || !isset($_GET['keyword'])) {
         echo 'Incorrect Parameters Specified';
+      } else {
+        $year = $_GET['year'];
+        $term = $_GET['term'];
+        $key_word = $_GET['keyword'];
+
+        //Queries for course codes that match specified semester and query term
+        $connection = mysqli_connect($host, $user, $password, $dbname) or die("Error " . mysqli_connect_error());
+        $course_sql = $connection->prepare("SELECT subject, code FROM Courses LEFT JOIN Semesters ON semester_id = Semesters.id WHERE year = ? AND term = ? AND concat_ws(' ', subject, code) like '?%'");
+        $course_sql->bind_param('sss', $year, $term, $key_word);
+
+        $course_sql->execute();
+
+        //Prepares results to be converted to JSON
+        $course_codes = array();
+        $course_sql->bind_result($course_subj, $course_code);
+        while ($course_sql->fetch()) {
+          array_push($course_codes, $course_subj.' '.$course_code);
+        }
+
+        echo json_encode($course_codes);
+        $course_sql->close();
+        mysqli_close($connection);
       }
-      $year = $_GET['year'];
-      $term = $_GET['term'];
-      $key_word = $_GET['keyword'];
-
-      //Queries for course codes that match specified semester and query term
-      $connection = mysqli_connect($host, $user, $password, $dbname) or die("Error " . mysqli_connect_error());
-      $course_sql = $connection->prepare("SELECT subject, code FROM Courses LEFT JOIN Semesters ON semester_id = Semesters.id WHERE year = ? AND term = ? AND concat_ws(' ', subject, code) like '?%'");
-      $course_sql->bind_param('sss', $year, $term, $key_word);
-
-      $course_sql->execute();
-
-      //Prepares results to be converted to JSON
-      $course_codes = array();
-      $course_sql->bind_result($course_subj, $course_code);
-      while ($course_sql->fetch()) {
-        array_push($course_codes, $course_subj.' '.$course_code);
-      }
-
-      echo json_encode($course_codes);
-      $course_sql->close();
-      mysqli_close($connection);
     } elseif($query_type == 'course_info') {
       //Course selection - Finds section/session info for specified course
 
