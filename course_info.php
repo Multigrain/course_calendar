@@ -1,4 +1,5 @@
 <?php
+  include 'mysql_crud.php';
   //DB read only credentials
   $host = 'mycampus.ctlmvn6rw3p8.us-east-1.rds.amazonaws.com:3306';
   $user = 'appserver';
@@ -58,7 +59,18 @@
       }
     } elseif($query_type == 'course_info') {
       //Course selection - Finds section/session info for specified course
+      //Ensures appropriate parameters specified
+      if(!isset($_GET['year']) || !isset($_GET['term']) || !isset($_GET['subject']) || !isset($_GET['code'])) {
+        echo 'Incorrect Parameters Specified';
+      } else  {
+        $year = $_GET['year'];
+        $term = $_GET['term'];
+        $subject = $_GET['subject'];
+        $code = $_GET['code'];
+      }
 
+      $connection = mysqli_connect($host, $user, $password, $dbname) or die("Error " . mysqli_connect_error());
+      echo getCourseID($connection, $subject, $code, $year, $term);
     }
 
   }
