@@ -50,9 +50,9 @@
         array_push($course_codes, $course_subj.' '.$course_code);
       }
 
-      echo json_encode($course_codes);*/
-      $course_sql->close();
-      //mysqli_close($connection);
+      echo json_encode($course_codes);
+      $course_sql->close();*/
+      mysqli_close($connection);
     } elseif($query_type == 'course_info') {
       //Course selection - Finds section/session info for specified course
 
