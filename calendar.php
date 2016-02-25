@@ -15,7 +15,8 @@
               data: {
                 'query_type' : 'course_code',
                 'year' : 2016,
-                'term' : '01'
+                'term' : '01',
+                'keyword' : request.term
               },
               success: function (data) {
                 response(data)
