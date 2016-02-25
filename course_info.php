@@ -31,7 +31,7 @@
       //Course codes - Finds all course codes for specified semester
       //Ensures appropriate parameters specified
       if(!isset($_GET['subject']) || !isset($_GET['code']) || !isset($_GET['year']) || !isset($_GET['term'])) {
-        throw new Exception('Incorrect Parameters Specified');
+        //throw new Exception('Incorrect Parameters Specified');
       }
       $subj = $_GET['subject']);
       $code = $_GET['code']);
