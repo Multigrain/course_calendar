@@ -2,7 +2,7 @@
   //DB read only credentials
   $host = 'mycampus.ctlmvn6rw3p8.us-east-1.rds.amazonaws.com:3306';
   $user = 'appserver';
-  $password = 'Publicuser';
+  $password = 'Publicuserz';
   $dbname = 'mycampus';
 
   //Determines if valid query (includes query_type field)
@@ -11,7 +11,7 @@
 
     if($query_type == 'semesters') {
       //Year selection - Finds all available terms
-      $connection = mysqli_connect($host, $user, $password, $dbname) or die("Error " . mysqli_error($connection));
+      $connection = mysqli_connect($host, $user, $password, $dbname) or die("Error " . mysqli_connect_error());
 
       $sql = "SELECT year, term FROM Semesters;";
       $result = $connection->query($sql);
@@ -19,7 +19,7 @@
       $semesters = array();
       if ($result->num_rows > 0) {
         while($row = $result->fetch_assoc()) {
-          array_push($semesters, array($row['year'], $row['semester']));
+          array_push($semesters, array($row['year'], $row['term']));
         }
       }
 
