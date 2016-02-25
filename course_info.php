@@ -39,7 +39,7 @@
 
       //Queries for course codes that match specified semester and query term
       $connection = mysqli_connect($host, $user, $password, $dbname) or die("Error " . mysqli_connect_error());
-      $course_sql = $connection->prepare('SELECT subject, code FROM Courses LEFT JOIN Semesters ON semester_id = Semesters.id WHERE year = ? AND term = ? AND concat_ws(' ', subject, code) like "?%"');
+      $course_sql = $connection->prepare("SELECT subject, code FROM Courses LEFT JOIN Semesters ON semester_id = Semesters.id WHERE year = ? AND term = ? AND concat_ws(' ', subject, code) like '?%'");
       $course_sql->bind_param('sss', $year, $term, $key_word);
 
       $course_sql->execute();
