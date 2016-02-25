@@ -43,7 +43,6 @@
           "LEFT JOIN Semesters ON semester_id = Semesters.id WHERE year = ? AND ".
           "term = ? AND concat_ws(' ', subject, code) like ?");
         $course_sql->bind_param('sss', $year, $term, $key_word);
-
         $course_sql->execute();
 
         //Prepares results to be converted to JSON
