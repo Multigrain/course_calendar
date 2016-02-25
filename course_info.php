@@ -29,8 +29,6 @@
       mysqli_close($connection);
     } elseif($query_type == 'course_code') {
       //Course codes - Finds all course codes for specified semester
-      $connection = mysqli_connect($host, $user, $password, $dbname) or die("Error " . mysqli_connect_error());
-
       //Ensures appropriate parameters specified
       if(!isset($_GET['subject']) || !isset($_GET['code']) || !isset($_GET['year']) || !isset($_GET['term'])) {
         throw new Exception('Incorrect Parameters Specified');
@@ -41,9 +39,10 @@
       $term = $_GET['term']);
 
       //Queries for course codes that match specified semester
-      $course_sql = $connection->prepare('SELECT subject, code FROM Courses '
-        .'LEFT JOIN Semesters ON semester_id = Semesters.id '
-        .'WHERE subject = ? AND code = ? AND year = ? AND term = ?');
+      $connection = mysqli_connect($host, $user, $password, $dbname) or die("Error " . mysqli_connect_error());
+      $course_sql = $connection->prepare('SELECT subject, code FROM Courses '.
+        'LEFT JOIN Semesters ON semester_id = Semesters.id '.
+        'WHERE subject = ? AND code = ? AND year = ? AND term = ?');
       $course_sql->bind_param('ssss', $subj, $code, $year, $term);
       $course_sql->execute();
 
