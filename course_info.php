@@ -14,19 +14,11 @@
       //Year selection - Finds all available terms
       $connection = mysqli_connect($host, $user, $password, $dbname) or die("Error " . mysqli_connect_error());
 
-      //Queries all semesters in db
-      $sql = "SELECT year, term FROM Semesters ORDER BY year DESC, term DESC";
-      $result = $connection->query($sql);
-
-      //Prepares results to be converted to JSON
-      $semesters = array();
-      if ($result->num_rows > 0) {
-        while($row = $result->fetch_assoc()) {
-          array_push($semesters, array($row['year'], $row['term']));
-        }
-      }
+      //Finds all available semesters
+      $semesters = getSemesters($connection);
 
       echo json_encode($semesters);
+      header('Content-Type: application/json');
       mysqli_close($connection);
     } elseif($query_type == 'course_code') {
       //Course codes - Finds all course codes for specified semester
@@ -38,23 +30,12 @@
         $term = $_GET['term'];
         $key_word = $_GET['keyword'].'%';
 
-        //Queries for course codes that match specified semester and query term
+        //Finds course codes similar to partial match
         $connection = mysqli_connect($host, $user, $password, $dbname) or die("Error " . mysqli_connect_error());
-        $course_sql = $connection->prepare("SELECT subject, code FROM Courses ".
-          "LEFT JOIN Semesters ON semester_id = Semesters.id WHERE year = ? AND ".
-          "term = ? AND concat_ws(' ', subject, code) like ? ORDER BY subject ASC, code ASC LIMIT 5");
-        $course_sql->bind_param('sss', $year, $term, $key_word);
-        $course_sql->execute();
-
-        //Prepares results to be converted to JSON
-        $course_codes = array();
-        $course_sql->bind_result($course_subj, $course_code);
-        while ($course_sql->fetch()) {
-          array_push($course_codes, $course_subj.' '.$course_code);
-        }
+        $course_codes = getCourseCodes($connection, $year, $term, $key_word);
 
         echo json_encode($course_codes);
-        $course_sql->close();
+        header('Content-Type: application/json');
         mysqli_close($connection);
       }
     } elseif($query_type == 'course_info') {
@@ -68,8 +49,18 @@
         $subject = $_GET['subject'];
         $code = $_GET['code'];
 
+        //Finds course info for matching semester
         $connection = mysqli_connect($host, $user, $password, $dbname) or die("Error " . mysqli_connect_error());
-        echo json_encode(getCourseID($connection, $subject, $code, $year, $term));
+        $course_info = getCourseInfo($connection, $subject, $code, $year, $term);
+
+        //Checks if course info found
+        if(empty($course_info)) {
+          echo 'Course not found.';
+        } else {
+          echo json_encode($course_info);
+          header('Content-Type: application/json');
+        }
+
         mysqli_close($connection);
       }
     }
