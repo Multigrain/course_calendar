@@ -295,7 +295,6 @@ var CourseCalendar = {
 
         if(selected_sessions[i].location != null) {
           sel_location = selected_sessions[i].location;
-          ses_title = ses_title + ", Location: " + sel_location;
         }
 
         //Adds repeated event to list and prepares second event
