@@ -1,4 +1,7 @@
-/* sizes */
+body {
+  background-color: rgb(244, 244, 244);
+}
+
 #main-container > div {
   min-height: 450px;
 }
@@ -15,13 +18,11 @@
 
 #footer {
   min-height: 40px;
-  background-color: rgb(244, 244, 244);
 }
 
 
 #main-container {
     overflow: hidden;
-    background-color: rgb(244, 244, 244);
 }
 
 #calendar-controller {
