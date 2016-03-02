@@ -4,6 +4,8 @@ var CourseCalendar = {
     CourseCalendar.selectTermListener();
     CourseCalendar.changeCourseListener();
     CourseCalendar.selectCourseListener();
+    CourseCalendar.changeSectionListener();
+    CourseCalendar.clickRemoveListener();
   },
   addCalendar: function() {
     $('#calendar').fullCalendar({
@@ -50,8 +52,8 @@ var CourseCalendar = {
       $('#calendar').fullCalendar('prev');
       $('.fc-center').children().text('Week 1');
     }
-    $('.fc-time:odd').remove();
-    $('.fc-time').attr('rowspan', 2);
+    $('.fc-axis.fc-time:odd').remove();
+    $('.fc-axis.fc-time').attr('rowspan', 2);
 
     //Sets classes for alternating row colours
     $('.fc-slats tr:nth-child(4n)').addClass("odd-row").prev().addClass("odd-row");
@@ -70,6 +72,7 @@ var CourseCalendar = {
       document.getElementById("courses-container").style.visibility = "hidden";
 
       //Clears calendar
+      CourseCalendar.clearCalendar();
 
       //Clears courses div
       $('.selected-courses').remove();
@@ -130,6 +133,14 @@ var CourseCalendar = {
               'code' : course_code[2]
             },
             success: function (response) {
+              //Checks if course already selected
+              for (var i = 0; i < CourseInfo.courses.length; i++) {
+                if (CourseInfo.courses[i].subject === course_code[1] && CourseInfo.courses[i].code === course_code[2]) {
+                  $('#course-prompt').html("Course already selected");
+                  return;
+                }
+              }
+
               //Checks if course was found
               if (response.title != null) {
                 //Adds course info as variable to be accessed later
@@ -170,9 +181,9 @@ var CourseCalendar = {
 
                   page_div = page_div + "</select>";
                 }
+                page_div = page_div + `<br><input type="submit" value="Remove Course" class="course_remove"></div>`
 
                 //Adds div to page
-
                 $('#calendar-courses').append(page_div);
                 document.getElementById("courses-container").style.visibility = "visible";
                 $('#course-prompt').html("");
@@ -209,5 +220,146 @@ var CourseCalendar = {
     var course_rgb = `rgb(${event_r},${event_g},${event_b})`;
 
     return course_rgb;
+  },
+  changeSectionListener: function() {
+    //Selecting section to update calendar
+    $('#calendar-courses').on('change', '.course_sections' ,function(selected_section) {
+      //Finds info of selected section
+      var sel_subj = $(this).parent().attr('subj');
+      var sel_code = $(this).parent().attr('code');
+      var sel_crn = parseInt($(this).val());
+      var sel_type = $(this).attr('course-type');
+
+      //Finds timeslot for selected section
+      outer_loop:
+      for (var i = 0; i < CourseInfo.courses.length; i++) {
+        if (CourseInfo.courses[i].subject === sel_subj && CourseInfo.courses[i].code === sel_code) {
+          for (var j = 0; j < CourseInfo.courses[i].sections.length; j++) {
+            if (CourseInfo.courses[i].sections[j].crn === sel_crn) {
+              CourseCalendar.removeEvent(sel_subj, sel_code, sel_type);
+              CourseCalendar.addEvent(CourseInfo.courses[i].sections[j].sessions, CourseInfo.courses[i].title, sel_crn, sel_type, sel_subj, sel_code, CourseInfo.courses[i].colour);
+              break outer_loop;
+            }
+          }
+        }
+      }
+    });
+  },
+  //Removes previous events when changing dropdown selection
+  removeEvent: function(selected_subj, selected_code, selected_type) {
+    var course_code = selected_subj + selected_code;
+    $('#calendar').fullCalendar( 'removeEvents', function(event) {
+        if(event.type === selected_type && event.code === course_code)
+          return true;
+    });
+  },
+  //Removes all events for subject when deleted
+  removeEvents: function(selected_subj, selected_code) {
+    var course_code = selected_subj + selected_code;
+    $('#calendar').fullCalendar( 'removeEvents', function(event) {
+        if(event.code === course_code)
+          return true;
+    });
+  },
+  addEvent: function(selected_sessions, course_title, selected_crn, selected_type, selected_subj, selected_code, selected_colour) {
+    var day_map = {'M' : 1, 'T' : 2, 'W' : 3, 'R': 4, 'F' : 5, 'S' : 6, 'U' : 7};
+    var curr_events = [];
+
+    //Formats the session info for fullcalendar
+    for (var i = 0; i < selected_sessions.length; i++) {
+      //Checks for days without times
+      if(selected_sessions[i].start_time == null || selected_sessions[i].finish_time == null || selected_sessions[i].day == null) {
+        continue;
+      }
+
+      //Checks for extra date
+      if(selected_sessions[i].week == 0 && selected_sessions[i].start_date == selected_sessions[i].finish_date) {
+        continue;
+      }
+
+      //Formats event data
+      var course_code = selected_subj + selected_code;
+      var ses_title = course_title + ' ' + selected_type;
+      var day_format = '2007-01-';
+      var sel_day = day_map[selected_sessions[i].day];
+      var sel_location = '';
+      var start_format = '';
+      var end_format = '';
+
+      //Determines if event is repeating
+      if(selected_sessions[i].week == 0) {
+        day_format = day_format + '0' + sel_day;
+        start_format = day_format + 'T' + selected_sessions[i].start_time;
+        end_format = day_format + 'T' + selected_sessions[i].finish_time;
+
+        if(selected_sessions[i].location != null) {
+          sel_location = selected_sessions[i].location;
+        }
+
+        //Adds repeated event to list and prepares second event
+        curr_events.push({title: ses_title, crn: selected_crn,start: start_format, end: end_format, type: selected_type, code: course_code, location: sel_location});
+        sel_day = sel_day + 7;
+        if(sel_day > 9) {
+          day_format = '2007-01-' + sel_day;
+        } else {
+          day_format = '2007-01-' + '0' + sel_day;
+        }
+      } else if(selected_sessions[i].week == 1) {
+        day_format = day_format + '0' + sel_day;
+      } else {
+        sel_day = sel_day + 7;
+        if(sel_day > 9) {
+          day_format = '2007-01-' + sel_day;
+        } else {
+          day_format = '2007-01-' + '0' + sel_day;
+        }
+      }
+
+      if(selected_sessions[i].location != null) {
+        sel_location = selected_sessions[i].location;
+      }
+      start_format =  day_format + 'T' + selected_sessions[i].start_time;
+      end_format = day_format + 'T' + selected_sessions[i].finish_time;
+
+      //Adds to list of events
+      curr_events.push({title: ses_title, id: selected_crn,start: start_format, end: end_format, type: selected_type, code: course_code, location: sel_location});
+      if(selected_sessions[i].week != 0) {
+        break;
+      }
+    }
+
+    //Adds events to events wrapper before Inserting
+    var cal_events = {
+      events: curr_events,
+      color: selected_colour
+    };
+    $('#calendar').fullCalendar( 'addEventSource', cal_events);
+
+  },
+  clickRemoveListener: function() {
+    //Clicking to remove course from calendar
+    $('#calendar-courses').on('click', '.course_remove' ,function(selected_section) {
+      var sel_subj = $(this).parent().attr('subj');
+      var sel_code = $(this).parent().attr('code');
+
+      //Removes data from local storage
+      for (var i = 0; i < CourseInfo.courses.length; i++) {
+        if (CourseInfo.courses[i].subject === sel_subj && CourseInfo.courses[i].code === sel_code) {
+          CourseInfo.courses.splice(i,1);
+          break;
+        }
+      }
+
+      //Removes entries from calendar
+      CourseCalendar.removeEvents(sel_subj, sel_code);
+
+      //Removes div from page
+      $(this).parent().remove();
+    });
+  },
+  clearCalendar: function() {
+    $('#calendar').fullCalendar( 'removeEvents', function(event) {
+      return true;
+    });
   }
 }

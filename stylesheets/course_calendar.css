@@ -42,6 +42,11 @@ body {
   padding-top: 0px;
 }
 
+#courses-container > div h2 {
+  margin-top: 0px;
+  padding-top: 0px;
+}
+
 #calendar-container {
     float: right;
     width: 70%;
