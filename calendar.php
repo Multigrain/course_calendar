@@ -21,6 +21,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
     <script src='scripts/moment.min.js'></script>
     <script src='scripts/fullcalendar.js'></script>
+    <script src="scripts/jspdf.min.js"></script>
+    <script src="scripts/html2canvas.js"></script>
     <script src='scripts/course_calendar.js'></script>
   </head>
   <body>
@@ -50,6 +52,7 @@
         </div>
         <div id="courses-container">
           <h2>Selected Courses</h2>
+          <button id="save-pdf" type="button">Save Calendar as PDF</button>
           <div id="calendar-courses">
 
           </div>

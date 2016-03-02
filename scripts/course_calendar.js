@@ -6,6 +6,7 @@ var CourseCalendar = {
     CourseCalendar.selectCourseListener();
     CourseCalendar.changeSectionListener();
     CourseCalendar.clickRemoveListener();
+    CourseCalendar.savePDF();
   },
   addCalendar: function() {
     $('#calendar').fullCalendar({
@@ -294,6 +295,7 @@ var CourseCalendar = {
 
         if(selected_sessions[i].location != null) {
           sel_location = selected_sessions[i].location;
+          ses_title = ses_title + ", Location: " + sel_location;
         }
 
         //Adds repeated event to list and prepares second event
@@ -360,6 +362,20 @@ var CourseCalendar = {
   clearCalendar: function() {
     $('#calendar').fullCalendar( 'removeEvents', function(event) {
       return true;
+    });
+  },
+  savePDF: function() {
+    $('#save-pdf').on('click', function() {
+
+      html2canvas(document.getElementById('calendar'), {
+        onrendered: function(canvas) {
+          var img = canvas.toDataURL("image/png");
+          var doc = new jsPDF('landscape');
+          doc.addImage(img, 'PNG', 10, 10, 210, 180);
+          doc.save('Calendar.pdf');
+        }
+      });
+
     });
   }
 }
