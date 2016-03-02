@@ -3,21 +3,77 @@
   min-height: 450px;
 }
 
-#header,
-#footer {
-    min-height: 40px;
+#header{
+    text-align: center;
+    padding-bottom: 10px;
 }
+
+#header h1 {
+  margin: 0px;
+  padding: 0px;
+}
+
+#footer {
+  min-height: 40px;
+  background-color: rgb(244, 244, 244);
+}
+
 
 #main-container {
     overflow: hidden;
+    background-color: rgb(244, 244, 244);
 }
 
 #calendar-controller {
     float: left;
-    width: 30%;
+    width: 25%;
+}
+
+#calendar-controller > div {
+  text-align: center;
+  background-color: #FFFFFF;
+  margin: 10px;
+  padding: 10px 0px 10px 0px;
+}
+
+#calendar-controller > div h2 {
+  margin-top: 0px;
+  padding-top: 0px;
 }
 
 #calendar-container {
     float: right;
     width: 70%;
+    margin-right: 2.5%;
+    margin-top: 10px;
+}
+
+.fc-view-container {
+  background-color: #FFFFFF;
+}
+
+#calendar-selector {
+    visibility: hidden;
+}
+
+#courses-container {
+    visibility: hidden;
+}
+
+.odd-row {
+    background-color: rgba(79, 129, 128, .2); color: black;
+}
+
+.error-message {
+  text-align: center;
+  color: red;
+}
+
+.fc-center {
+  text-align: center;
+}
+
+.selected-courses {
+  margin: 5px;
+  padding: 5px 0px 5px 0px;
 }

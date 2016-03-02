@@ -24,8 +24,8 @@
         array_push($english_semesters, $term_key[$semester[1]].' '.$semester[0]);
       }
 
-      echo json_encode($english_semesters, JSON_UNESCAPED_SLASHES);
       header('Content-Type: application/json');
+      echo json_encode($english_semesters, JSON_UNESCAPED_SLASHES);
       mysqli_close($connection);
     } elseif($query_type == 'course_code') {
       //Course codes - Finds all course codes for specified semester
@@ -41,8 +41,8 @@
         $connection = mysqli_connect($host, $user, $password, $dbname) or die("Error " . mysqli_connect_error());
         $course_codes = getCourseCodes($connection, $year, $term, $key_word);
 
-        echo json_encode($course_codes);
         header('Content-Type: application/json');
+        echo json_encode($course_codes);
         mysqli_close($connection);
       }
     } elseif($query_type == 'course_info') {
@@ -65,8 +65,8 @@
         if(empty($course_info)) {
           echo 'Course not found.';
         } else {
-          echo json_encode($course_info);
           header('Content-Type: application/json');
+          echo json_encode($course_info);
         }
       }
     }
