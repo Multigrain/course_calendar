@@ -17,7 +17,14 @@
       //Finds all available semesters
       $semesters = getSemesters($connection);
 
-      echo json_encode($semesters);
+      //Changes semesters to plain english
+      $term_key = array( '01' => 'Winter', '05' => 'Spring/Summer', '09' => 'Fall');
+      $english_semesters = array();
+      foreach ($semesters as $semester) {
+        array_push($english_semesters, $term_key[$semester[1]].' '.$semester[0]);
+      }
+
+      echo json_encode($english_semesters, JSON_UNESCAPED_SLASHES);
       header('Content-Type: application/json');
       mysqli_close($connection);
     } elseif($query_type == 'course_code') {
@@ -52,6 +59,7 @@
         //Finds course info for matching semester
         $connection = mysqli_connect($host, $user, $password, $dbname) or die("Error " . mysqli_connect_error());
         $course_info = getCourseInfo($connection, $subject, $code, $year, $term);
+        mysqli_close($connection);
 
         //Checks if course info found
         if(empty($course_info)) {
@@ -60,8 +68,6 @@
           echo json_encode($course_info);
           header('Content-Type: application/json');
         }
-
-        mysqli_close($connection);
       }
     }
   }

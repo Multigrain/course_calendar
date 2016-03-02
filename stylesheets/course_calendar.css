@@ -1,0 +1,23 @@
+/* sizes */
+#main-container > div {
+  min-height: 450px;
+}
+
+#header,
+#footer {
+    min-height: 40px;
+}
+
+#main-container {
+    overflow: hidden;
+}
+
+#calendar-controller {
+    float: left;
+    width: 30%;
+}
+
+#calendar-container {
+    float: right;
+    width: 70%;
+}
